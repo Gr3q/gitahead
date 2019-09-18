@@ -722,16 +722,17 @@ public:
       int h_4 = h / 4;
 
       // radius
-      int r = w / 3;
+      int radius = w / 3;
 
       // xs
       int x1 = x + (w / 2);
+      int xr = x + (radius * 2) + 4;
       int x2 = x + w;
 
       // ys
-      int y1 = y + h_2 - r;
+      int y1 = y + h_2 - radius;
       int y2 = y + h_2;
-      int y3 = y + h_2 + r;
+      int y3 = y + h_2 + radius;
       int y4 = y + h_2 + h_4;
       int y5 = y + h;
 
@@ -749,7 +750,7 @@ public:
         switch (segments.at(j).toInt()) {
           case Dot:
             painter->setPen(dot);
-            painter->drawEllipse(QPoint(x1, y2), r, r);
+            painter->drawEllipse(QPoint(x1, y2), radius, radius);
             break;
 
           case Top:
@@ -765,13 +766,13 @@ public:
             break;
 
           case Cross:
-            painter->drawLine(x, y4, x2, y4);
+            painter->drawLine(x, y2, x2, y2);
             break;
 
           case RightOut: {
             QPainterPath path;
-            path.moveTo(x1, y3);
-            path.quadTo(x1, y4, x2, y4);
+            path.moveTo(xr, y2);
+            path.cubicTo(xr, y2, xr, y2, x2, y2);
             painter->drawPath(path);
             break;
           }
@@ -779,15 +780,15 @@ public:
           case LeftOut: {
             QPainterPath path;
             path.moveTo(x1, y3);
-            path.quadTo(x1, y4, x, y4);
+            path.quadTo(x1, y5-1, x, y5-1);
             painter->drawPath(path);
             break;
           }
 
           case RightIn: {
             QPainterPath path;
-            path.moveTo(x1, y5);
-            path.quadTo(x1, y4, x2, y4);
+            path.moveTo(x1, y5-1);
+            path.quadTo(x1, y5-1, x2, y5-1);
             painter->drawPath(path);
             break;
           }
@@ -795,7 +796,7 @@ public:
           case LeftIn: {
             QPainterPath path;
             path.moveTo(x1, y5);
-            path.quadTo(x1, y4, x, y4);
+            path.quadTo(x1, y2, x, y2);
             painter->drawPath(path);
             break;
           }
@@ -978,16 +979,16 @@ public:
         painter->save();
 
         // Calculate outer radius and vertices.
-        qreal r = (star.height() / 2.0) - kStarPadding;
+        qreal radius = (star.height() / 2.0) - kStarPadding;
         qreal x = star.x() + (star.width() / 2.0);
         qreal y = star.y() + (star.height() / 2.0);
-        qreal x1 = r * qCos(M_PI / 10.0);
-        qreal y1 = -r * qSin(M_PI / 10.0);
-        qreal x2 = r * qCos(17.0 * M_PI / 10.0);
-        qreal y2 = -r * qSin(17.0 * M_PI / 10.0);
+        qreal x1 = radius * qCos(M_PI / 10.0);
+        qreal y1 = -radius * qSin(M_PI / 10.0);
+        qreal x2 = radius * qCos(17.0 * M_PI / 10.0);
+        qreal y2 = -radius * qSin(17.0 * M_PI / 10.0);
 
         // Calculate inner radius and verices.
-        qreal xi = ((y1 + r) * x2) / (y2 + r);
+        qreal xi = ((y1 + radius) * x2) / (y2 + radius);
         qreal ri = qSqrt(qPow(xi, 2.0) + qPow(y1, 2.0));
         qreal xi1 = ri * qCos(3.0 * M_PI / 10.0);
         qreal yi1 = -ri * qSin(3.0 * M_PI / 10.0);
@@ -995,7 +996,7 @@ public:
         qreal yi2 = -ri * qSin(19.0 * M_PI / 10.0);
 
         QPolygonF polygon({
-          QPointF(0, -r),
+          QPointF(0, -radius),
           QPointF(xi1, yi1),
           QPointF(x1, y1),
           QPointF(xi2, yi2),
