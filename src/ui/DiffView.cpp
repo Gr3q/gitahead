@@ -2028,7 +2028,7 @@ private:
 DiffView::DiffView(const git::Repository &repo, QWidget *parent)
   : QScrollArea(parent)
 {
-  setStyleSheet(kStyleSheet);
+  //setStyleSheet(kStyleSheet);
   setAcceptDrops(true);
   setWidgetResizable(true);
   setFocusPolicy(Qt::NoFocus);
